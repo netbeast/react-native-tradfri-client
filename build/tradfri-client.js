@@ -1,16 +1,16 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function fulfilled (value) {try {step(generator.next(value));} catch (e) {reject(e);} }
+        function rejected (value) {try {step(generator["throw"](value));} catch (e) {reject(e);} }
+        function step (result) {result.done ? resolve(result.value) : new P(function (resolve) {resolve(result.value);}).then(fulfilled, rejected);}
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", {value: true});
 // load external modules
 const events_1 = require("events");
-const node_coap_client_1 = require("node-coap-client");
+const node_coap_client_1 = require("react-native-coap-client");
 // load internal modules
 const async_1 = require("alcalzone-shared/async");
 const deferred_promise_1 = require("alcalzone-shared/deferred-promise");
@@ -28,7 +28,7 @@ const tradfri_error_1 = require("./lib/tradfri-error");
 const watcher_1 = require("./lib/watcher");
 class TradfriClient extends events_1.EventEmitter {
     // tslint:enable:unified-signatures
-    constructor(hostname, optionsOrLogger) {
+    constructor (hostname, optionsOrLogger) {
         super();
         this.hostname = hostname;
         /** dictionary of CoAP observers */
@@ -74,7 +74,7 @@ class TradfriClient extends events_1.EventEmitter {
      * @param identity A previously negotiated identity.
      * @param psk The pre-shared key belonging to the identity.
      */
-    connect(identity, psk) {
+    connect (identity, psk) {
         return __awaiter(this, void 0, void 0, function* () {
             const maxAttempts = (this.watcher != null && this.watcher.options.reconnectionEnabled) ?
                 this.watcher.options.maximumConnectionAttempts :
@@ -131,9 +131,9 @@ class TradfriClient extends events_1.EventEmitter {
                 // https://github.com/Microsoft/TypeScript/issues/27239
                 lastFailureReason.message =
                     `Could not connect to the gateway${maxAttempts === 1 ? "" : ` after ${maxAttempts} tries`}:\n`
-                        // @ts-ignore This is a false positive, lastFailureReason is an Error instance
-                        // https://github.com/Microsoft/TypeScript/issues/27239
-                        + lastFailureReason.message;
+                    // @ts-ignore This is a false positive, lastFailureReason is an Error instance
+                    // https://github.com/Microsoft/TypeScript/issues/27239
+                    + lastFailureReason.message;
                 throw lastFailureReason;
             }
         });
@@ -144,12 +144,12 @@ class TradfriClient extends events_1.EventEmitter {
      * @param psk The pre-shared key to use
      * @returns true if the connection attempt was successful, otherwise false.
      */
-    tryToConnect(identity, psk) {
+    tryToConnect (identity, psk) {
         return __awaiter(this, void 0, void 0, function* () {
             // initialize CoAP client
             node_coap_client_1.CoapClient.reset();
             node_coap_client_1.CoapClient.setSecurityParams(this.hostname, {
-                psk: { [identity]: psk },
+                psk: {[identity]: psk},
             });
             logger_1.log(`Attempting connection. Identity = ${identity}, psk = ${psk}`, "debug");
             const result = yield node_coap_client_1.CoapClient.tryToConnect(this.requestBase);
@@ -168,7 +168,7 @@ class TradfriClient extends events_1.EventEmitter {
      * @returns The identity and psk to use for future connections. Store these!
      * @throws TradfriError
      */
-    authenticate(securityCode) {
+    authenticate (securityCode) {
         return __awaiter(this, void 0, void 0, function* () {
             // first, check try to connect with the security code
             logger_1.log("authenticate() > trying to connect with the security code", "debug");
@@ -182,7 +182,7 @@ class TradfriClient extends events_1.EventEmitter {
             const identity = `tradfri_${Date.now()}`;
             logger_1.log(`authenticating with identity "${identity}"`, "debug");
             // request creation of new PSK
-            let payload = JSON.stringify({ 9090: identity });
+            let payload = JSON.stringify({9090: identity});
             payload = Buffer.from(payload);
             const response = yield this.swallowInternalCoapRejections(node_coap_client_1.CoapClient.request(`${this.requestBase}${endpoints_1.endpoints.gateway(endpoints_1.GatewayEndpoints.Authenticate)}`, "post", payload));
             // check the response
@@ -194,7 +194,7 @@ class TradfriClient extends events_1.EventEmitter {
             // TODO: check when payload is defined and when not
             const pskResponse = JSON.parse(response.payload.toString("utf8"));
             const psk = pskResponse["9091"];
-            return { identity, psk };
+            return {identity, psk};
         });
     }
     /**
@@ -204,7 +204,7 @@ class TradfriClient extends events_1.EventEmitter {
      * @param callback The callback to be invoked when the resource updates
      * @returns true if the observer was set up, false otherwise (e.g. if it already exists)
      */
-    observeResource(path, callback) {
+    observeResource (path, callback) {
         return __awaiter(this, void 0, void 0, function* () {
             // check if we are already observing this resource
             const observerUrl = this.getObserverUrl(path);
@@ -218,7 +218,7 @@ class TradfriClient extends events_1.EventEmitter {
             return true;
         });
     }
-    getObserverUrl(path) {
+    getObserverUrl (path) {
         path = normalizeResourcePath(path);
         return path.startsWith(this.requestBase) ? path : `${this.requestBase}${path}`;
     }
@@ -226,7 +226,7 @@ class TradfriClient extends events_1.EventEmitter {
      * Checks if a resource is currently being observed
      * @param path The path of the resource
      */
-    isObserving(path) {
+    isObserving (path) {
         const observerUrl = this.getObserverUrl(path);
         return this.observedPaths.indexOf(observerUrl) > -1;
     }
@@ -235,7 +235,7 @@ class TradfriClient extends events_1.EventEmitter {
      * Use the specialized version of this method for observers that were set up with the specialized versions of `observeResource`
      * @param path The path of the resource
      */
-    stopObservingResource(path) {
+    stopObservingResource (path) {
         // remove observer
         const observerUrl = this.getObserverUrl(path);
         const index = this.observedPaths.indexOf(observerUrl);
@@ -249,7 +249,7 @@ class TradfriClient extends events_1.EventEmitter {
      * Resets the underlying CoAP client and clears all observers.
      * @param preserveObservers Whether the active observers should be remembered to restore them later
      */
-    reset(preserveObservers = false) {
+    reset (preserveObservers = false) {
         node_coap_client_1.CoapClient.reset();
         this.observedPaths = [];
         if (!preserveObservers)
@@ -258,7 +258,7 @@ class TradfriClient extends events_1.EventEmitter {
     /**
      * Closes the underlying CoAP client and clears all observers.
      */
-    destroy() {
+    destroy () {
         if (this.watcher != null)
             this.watcher.stop();
         this.reset();
@@ -267,7 +267,7 @@ class TradfriClient extends events_1.EventEmitter {
      * Restores all previously remembered observers with their original callbacks
      * Call this AFTER a dead connection was restored
      */
-    restoreObservers() {
+    restoreObservers () {
         return __awaiter(this, void 0, void 0, function* () {
             logger_1.log("restoring previously used observers", "debug");
             let devicesRestored = false;
@@ -304,7 +304,7 @@ class TradfriClient extends events_1.EventEmitter {
      * Sets up an observer for all devices
      * @returns A promise that resolves when the information about all devices has been received.
      */
-    observeDevices() {
+    observeDevices () {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.isObserving(endpoints_1.endpoints.devices))
                 return;
@@ -315,7 +315,7 @@ class TradfriClient extends events_1.EventEmitter {
             return this.observeDevicesPromise;
         });
     }
-    observeDevices_callback(response) {
+    observeDevices_callback (response) {
         return __awaiter(this, void 0, void 0, function* () {
             // check response code
             if (response.code.toString() !== "2.05") {
@@ -365,7 +365,7 @@ class TradfriClient extends events_1.EventEmitter {
             }
         });
     }
-    stopObservingDevices() {
+    stopObservingDevices () {
         const pathPrefix = `${this.requestBase}${endpoints_1.endpoints.devices}`;
         // remove all observers pointing to a device related endpoint
         this.observedPaths
@@ -374,7 +374,7 @@ class TradfriClient extends events_1.EventEmitter {
     }
     // gets called whenever "get /15001/<instanceId>" updates
     // returns true when the device was received successfully
-    observeDevice_callback(instanceId, response) {
+    observeDevice_callback (instanceId, response) {
         // check response code
         if (response.code.toString() !== "2.05") {
             if (!this.handleNonSuccessfulResponse(response, `observeDevice(${instanceId})`))
@@ -398,7 +398,7 @@ class TradfriClient extends events_1.EventEmitter {
      * Sets up an observer for all groups and scenes
      * @returns A promise that resolves when the information about all groups and scenes has been received.
      */
-    observeGroupsAndScenes() {
+    observeGroupsAndScenes () {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.isObserving(endpoints_1.endpoints.groups))
                 return;
@@ -410,7 +410,7 @@ class TradfriClient extends events_1.EventEmitter {
         });
     }
     // gets called whenever "get /15004" updates
-    observeGroups_callback(response) {
+    observeGroups_callback (response) {
         return __awaiter(this, void 0, void 0, function* () {
             // check response code
             if (response.code.toString() !== "2.05") {
@@ -443,18 +443,18 @@ class TradfriClient extends events_1.EventEmitter {
                                 Promise
                                     .all(this.observeScenesPromises.values())
                                     .then(() => {
-                                    this.observeGroupsPromise.resolve();
-                                    this.observeGroupsPromise = undefined;
-                                    this.observeScenesPromises = undefined;
-                                })
+                                        this.observeGroupsPromise.resolve();
+                                        this.observeGroupsPromise = undefined;
+                                        this.observeScenesPromises = undefined;
+                                    })
                                     .catch(reason => {
-                                    // in some cases, the promises can be null here
-                                    if (this.observeGroupsPromise != null) {
-                                        this.observeGroupsPromise.reject(reason);
-                                    }
-                                    this.observeGroupsPromise = undefined;
-                                    this.observeScenesPromises = undefined;
-                                });
+                                        // in some cases, the promises can be null here
+                                        if (this.observeGroupsPromise != null) {
+                                            this.observeGroupsPromise.reject(reason);
+                                        }
+                                        this.observeGroupsPromise = undefined;
+                                        this.observeScenesPromises = undefined;
+                                    });
                             }
                         }
                         else {
@@ -478,13 +478,13 @@ class TradfriClient extends events_1.EventEmitter {
             });
         });
     }
-    stopObservingGroups() {
+    stopObservingGroups () {
         for (const id of Object.keys(this.groups)) {
             this.stopObservingGroup(+id);
         }
         this.stopObservingResource(endpoints_1.endpoints.groups);
     }
-    stopObservingGroup(instanceId) {
+    stopObservingGroup (instanceId) {
         this.stopObservingResource(`${endpoints_1.endpoints.groups}/${instanceId}`);
         const scenesPrefix = this.getObserverUrl(`${endpoints_1.endpoints.scenes}/${instanceId}`);
         const pathsToDelete = this.observedPaths.filter(path => path.startsWith(scenesPrefix));
@@ -493,7 +493,7 @@ class TradfriClient extends events_1.EventEmitter {
         }
     }
     // gets called whenever "get /15004/<instanceId>" updates
-    observeGroup_callback(instanceId, response) {
+    observeGroup_callback (instanceId, response) {
         // check response code
         if (response.code.toString() !== "2.05") {
             if (!this.handleNonSuccessfulResponse(response, `observeGroup(${instanceId})`))
@@ -525,7 +525,7 @@ class TradfriClient extends events_1.EventEmitter {
         return true;
     }
     // gets called whenever "get /15005/<groupId>" updates
-    observeScenes_callback(groupId, response) {
+    observeScenes_callback (groupId, response) {
         return __awaiter(this, void 0, void 0, function* () {
             // check response code
             if (response.code.toString() !== "2.05") {
@@ -578,7 +578,7 @@ class TradfriClient extends events_1.EventEmitter {
         });
     }
     // gets called whenever "get /15005/<groupId>/<instanceId>" updates
-    observeScene_callback(groupId, instanceId, response) {
+    observeScene_callback (groupId, instanceId, response) {
         // check response code
         if (response.code.toString() !== "2.05") {
             if (!this.handleNonSuccessfulResponse(response, `observeScene(${groupId}, ${instanceId})`))
@@ -601,7 +601,7 @@ class TradfriClient extends events_1.EventEmitter {
      * Sets up an observer for the gateway
      * @returns A promise that resolves when the gateway information has been received for the first time
      */
-    observeGateway() {
+    observeGateway () {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.isObserving(endpoints_1.endpoints.gateway(endpoints_1.GatewayEndpoints.Details)))
                 return;
@@ -617,7 +617,7 @@ class TradfriClient extends events_1.EventEmitter {
             return this.observeGatewayPromise;
         });
     }
-    observeGateway_callback(response) {
+    observeGateway_callback (response) {
         return __awaiter(this, void 0, void 0, function* () {
             logger_1.log(`received response to observeGateway(): ${JSON.stringify(response, null, 4)}`);
             // check response code
@@ -646,14 +646,14 @@ class TradfriClient extends events_1.EventEmitter {
             }
         });
     }
-    stopObservingGateway() {
+    stopObservingGateway () {
         this.stopObservingResource(`${this.requestBase}${endpoints_1.endpoints.gateway(endpoints_1.GatewayEndpoints.Details)}`);
     }
     /**
      * Sets up an observer for the notification
      * @returns A promise that resolves when a notification has been received for the first time
      */
-    observeNotifications() {
+    observeNotifications () {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.isObserving(endpoints_1.endpoints.notifications))
                 return;
@@ -669,7 +669,7 @@ class TradfriClient extends events_1.EventEmitter {
             return this.observeNotificationsPromise;
         });
     }
-    observeNotifications_callback(response) {
+    observeNotifications_callback (response) {
         return __awaiter(this, void 0, void 0, function* () {
             logger_1.log(`received response to observeNotifications(): ${JSON.stringify(response, null, 4)}`);
             // check response code
@@ -710,7 +710,7 @@ class TradfriClient extends events_1.EventEmitter {
             }
         });
     }
-    stopObservingNotifications() {
+    stopObservingNotifications () {
         this.stopObservingResource(`${this.requestBase}${endpoints_1.endpoints.notifications}`);
     }
     // =================================================================================
@@ -722,7 +722,7 @@ class TradfriClient extends events_1.EventEmitter {
      * @param context Some logging context to identify where the error comes from
      * @returns true if the calling method may proceed, false if it should break
      */
-    handleNonSuccessfulResponse(resp, context, ignore404 = true) {
+    handleNonSuccessfulResponse (resp, context, ignore404 = true) {
         // check response code
         const code = resp.code.toString();
         const payload = parsePayload(resp) || "";
@@ -741,7 +741,7 @@ class TradfriClient extends events_1.EventEmitter {
      * Pings the gateway to check if it is alive
      * @param timeout - (optional) Timeout in ms, after which the ping is deemed unanswered. Default: 5000ms
      */
-    ping(timeout) {
+    ping (timeout) {
         return node_coap_client_1.CoapClient.ping(this.requestBase, timeout);
     }
     /**
@@ -749,7 +749,7 @@ class TradfriClient extends events_1.EventEmitter {
      * @param accessory The device to be changed
      * @returns true if a request was sent, false otherwise
      */
-    updateDevice(accessory) {
+    updateDevice (accessory) {
         // retrieve the original as a reference for serialization
         if (!(accessory.instanceId in this.devices)) {
             throw new Error(`The device with id ${accessory.instanceId} is not known and cannot be update!`);
@@ -762,7 +762,7 @@ class TradfriClient extends events_1.EventEmitter {
      * @param group The group to be changed
      * @returns true if a request was sent, false otherwise
      */
-    updateGroup(group) {
+    updateGroup (group) {
         // retrieve the original as a reference for serialization
         if (!(group.instanceId in this.groups)) {
             throw new Error(`The group with id ${group.instanceId} is not known and cannot be update!`);
@@ -777,7 +777,7 @@ class TradfriClient extends events_1.EventEmitter {
      * @param reference The reference value to calculate the diff
      * @returns true if a request was sent, false otherwise
      */
-    updateResource(path, newObj, reference) {
+    updateResource (path, newObj, reference) {
         return __awaiter(this, void 0, void 0, function* () {
             // ensure the ipso options were not lost on the user side
             newObj.options = this.ipsoOptions;
@@ -803,19 +803,19 @@ class TradfriClient extends events_1.EventEmitter {
      * @param force If the provided properties must be sent in any case
      * @returns true if a request was sent, false otherwise
      */
-    operateGroup(group, operation, force = false) {
+    operateGroup (group, operation, force = false) {
         const newGroup = group.clone().merge(operation, true /* all props */);
         const reference = group.clone();
         if (force) {
             // to force the properties being sent, we need to reset them on the reference
             const inverseOperation = object_polyfill_1.composeObject(object_polyfill_1.entries(operation)
                 .map(([key, value]) => {
-                switch (typeof value) {
-                    case "number": return [key, Number.NaN];
-                    case "boolean": return [key, !value];
-                    default: return [key, null];
-                }
-            }));
+                    switch (typeof value) {
+                        case "number": return [key, Number.NaN];
+                        case "boolean": return [key, !value];
+                        default: return [key, null];
+                    }
+                }));
             reference.merge(inverseOperation, true);
         }
         return this.updateResource(`${endpoints_1.endpoints.groups}/${group.instanceId}`, newGroup, reference);
@@ -826,7 +826,7 @@ class TradfriClient extends events_1.EventEmitter {
      * @param operation The properties to be set
      * @returns true if a request was sent, false otherwise
      */
-    operateLight(accessory, operation) {
+    operateLight (accessory, operation) {
         if (accessory.type !== accessory_1.AccessoryTypes.lightbulb) {
             throw new Error("The parameter accessory must be a lightbulb!");
         }
@@ -841,7 +841,7 @@ class TradfriClient extends events_1.EventEmitter {
      * @param method The method of the request
      * @param payload The optional payload as a JSON object
      */
-    request(path, method, payload) {
+    request (path, method, payload) {
         return __awaiter(this, void 0, void 0, function* () {
             // create actual payload
             let jsonPayload;
@@ -858,7 +858,7 @@ class TradfriClient extends events_1.EventEmitter {
             };
         });
     }
-    swallowInternalCoapRejections(promise) {
+    swallowInternalCoapRejections (promise) {
         // We use the conventional promise pattern here so we can opt to never
         // resolve the promise in case we want to redirect it into an emitted error event
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
@@ -885,24 +885,24 @@ class TradfriClient extends events_1.EventEmitter {
         }));
     }
     /** Reboots the gateway. This operation is additionally acknowledged with a reboot notification. */
-    rebootGateway() {
+    rebootGateway () {
         return __awaiter(this, void 0, void 0, function* () {
-            const { code } = yield this.request(endpoints_1.endpoints.gateway(endpoints_1.GatewayEndpoints.Reboot), "post");
+            const {code} = yield this.request(endpoints_1.endpoints.gateway(endpoints_1.GatewayEndpoints.Reboot), "post");
             return code === "2.01";
         });
     }
     /** Factory resets the gateway. WARNING: All configuration will be wiped! */
-    resetGateway() {
+    resetGateway () {
         return __awaiter(this, void 0, void 0, function* () {
             // TODO: this is untested, need to verify against a real gateway
-            const { code } = yield this.request(endpoints_1.endpoints.gateway(endpoints_1.GatewayEndpoints.Reset), "post");
+            const {code} = yield this.request(endpoints_1.endpoints.gateway(endpoints_1.GatewayEndpoints.Reset), "post");
             return code === "2.01";
         });
     }
 }
 exports.TradfriClient = TradfriClient;
 /** Normalizes the path to a resource, so it can be used for storing the observer */
-function normalizeResourcePath(path) {
+function normalizeResourcePath (path) {
     path = path || "";
     while (path.startsWith("/"))
         path = path.slice(1);
@@ -910,7 +910,7 @@ function normalizeResourcePath(path) {
         path = path.slice(0, -1);
     return path;
 }
-function parsePayload(response) {
+function parsePayload (response) {
     if (response.payload == null)
         return null;
     switch (response.format) {

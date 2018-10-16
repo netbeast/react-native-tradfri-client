@@ -2,14 +2,12 @@
 // tslint:disable:no-unused-expression
 // tslint:disable:variable-name
 
-import { assert, expect } from "chai";
-import { SinonFakeTimers, spy, stub, useFakeTimers } from "sinon";
+import {expect} from "chai";
+import {SinonFakeTimers, spy, stub, useFakeTimers} from "sinon";
 
-import { createDeferredPromise, DeferredPromise } from "alcalzone-shared/deferred-promise";
-import { CoapClient as coap, CoapResponse } from "node-coap-client";
-import { createNetworkMock } from "../../test/mocks";
-import { TradfriClient } from "../tradfri-client";
-import { ConnectionWatcher, ConnectionWatcherOptions } from "./watcher";
+import {createDeferredPromise, DeferredPromise} from "alcalzone-shared/deferred-promise";
+import {createNetworkMock} from "../../test/mocks";
+import {ConnectionWatcher, ConnectionWatcherOptions} from "./watcher";
 
 describe("connection watching => ", () => {
 
@@ -35,7 +33,7 @@ describe("connection watching => ", () => {
 	afterEach(resetStubHistory);
 
 	it("the watcher constructor should throw on invalid arguments", () => {
-		function construct(options?: Partial<ConnectionWatcherOptions>) {
+		function construct (options?: Partial<ConnectionWatcherOptions>) {
 			return new ConnectionWatcher(null, options);
 		}
 
@@ -60,21 +58,21 @@ describe("connection watching => ", () => {
 
 	let pingPromise: DeferredPromise<void>;
 	let watcher: ConnectionWatcher;
-	function createWatcher(options: Partial<ConnectionWatcherOptions>) {
+	function createWatcher (options: Partial<ConnectionWatcherOptions>) {
 		watcher = new ConnectionWatcher(tradfri, options);
 		watcher
 			// we need this little hack, because the watcher internally uses await,
 			// so the callback returns before the method has completed
 			.on("ping succeeded", () => pingPromise && pingPromise.resolve())
 			.on("ping failed", () => pingPromise && pingPromise.resolve())
-		;
+			;
 	}
 	createWatcher({
 		pingInterval: 1000,
 	});
 
 	// async hacked version of clock.runAll that waits for the async method to complete aswell
-	async function runAllAsync() {
+	async function runAllAsync () {
 		clock.runAll();
 		pingPromise = createDeferredPromise();
 		await pingPromise;
@@ -125,7 +123,7 @@ describe("connection watching => ", () => {
 			.once("ping succeeded", successSpy)
 			.once("ping failed", failedSpy)
 			.start()
-		;
+			;
 		// run the timeouts
 		await runAllAsync();
 
@@ -138,7 +136,7 @@ describe("connection watching => ", () => {
 			.removeListener("ping succeeded", successSpy)
 			.removeListener("ping failed", failedSpy)
 			.stop()
-		;
+			;
 		fakeCoap.ping.resetBehavior();
 	});
 
@@ -152,7 +150,7 @@ describe("connection watching => ", () => {
 			.on("ping succeeded", successSpy)
 			.on("ping failed", failedSpy)
 			.start()
-		;
+			;
 		// 5 times should be enough
 		const times = 5;
 		for (let i = 1; i <= times; i++) {
@@ -168,7 +166,7 @@ describe("connection watching => ", () => {
 			.removeListener("ping succeeded", successSpy)
 			.removeListener("ping failed", failedSpy)
 			.stop()
-		;
+			;
 		fakeCoap.ping.resetBehavior();
 	});
 
@@ -177,7 +175,7 @@ describe("connection watching => ", () => {
 			.onFirstCall().returns(true)
 			.onSecondCall().returns(false)
 			.onThirdCall().returns(true)
-		;
+			;
 		fakeCoap.ping.returns(false);
 
 		// set up spies
@@ -185,7 +183,7 @@ describe("connection watching => ", () => {
 		watcher
 			.on("ping failed", failedSpy)
 			.start()
-		;
+			;
 		// 5 times should be enough
 		const times = 5;
 		for (let i = 1; i <= times; i++) {
@@ -199,7 +197,7 @@ describe("connection watching => ", () => {
 		watcher
 			.removeListener("ping failed", failedSpy)
 			.stop()
-		;
+			;
 		fakeCoap.ping.resetBehavior();
 	});
 
@@ -207,7 +205,7 @@ describe("connection watching => ", () => {
 		fakeCoap.ping
 			.onFirstCall().returns(true)
 			.onSecondCall().returns(true)
-		;
+			;
 		fakeCoap.ping.returns(false);
 
 		// set up spies
@@ -215,7 +213,7 @@ describe("connection watching => ", () => {
 		watcher
 			.on("connection lost", leSpy)
 			.start()
-		;
+			;
 		// execute a number of pings
 		for (let i = 0; i < 5; i++) {
 			await runAllAsync();
@@ -228,7 +226,7 @@ describe("connection watching => ", () => {
 		watcher
 			.removeAllListeners("connection lost")
 			.stop()
-		;
+			;
 		fakeCoap.ping.resetBehavior();
 	});
 
@@ -236,7 +234,7 @@ describe("connection watching => ", () => {
 		fakeCoap.ping
 			.onFirstCall().returns(false)
 			.onSecondCall().returns(false)
-		;
+			;
 		fakeCoap.ping.returns(true);
 
 		// set up spies
@@ -244,7 +242,7 @@ describe("connection watching => ", () => {
 		watcher
 			.on("connection alive", leSpy)
 			.start()
-		;
+			;
 		// execute a number of pings
 		for (let i = 0; i < 5; i++) {
 			await runAllAsync();
@@ -257,7 +255,7 @@ describe("connection watching => ", () => {
 		watcher
 			.removeAllListeners("connection alive")
 			.stop()
-		;
+			;
 		fakeCoap.ping.resetBehavior();
 	});
 
@@ -270,7 +268,7 @@ describe("connection watching => ", () => {
 
 		fakeCoap.ping
 			.onFirstCall().returns(true)
-		;
+			;
 		fakeCoap.ping.returns(false);
 
 		// set up spies
@@ -278,7 +276,7 @@ describe("connection watching => ", () => {
 		watcher
 			.on("gateway offline", leSpy)
 			.start()
-		;
+			;
 		// execute a number of pings
 		for (let i = 1; i <= 10; i++) {
 			await runAllAsync();
@@ -290,7 +288,7 @@ describe("connection watching => ", () => {
 		watcher
 			.removeAllListeners("gateway offline")
 			.stop()
-		;
+			;
 		fakeCoap.ping.resetBehavior();
 	});
 
@@ -306,7 +304,7 @@ describe("connection watching => ", () => {
 
 		fakeCoap.ping
 			.onFirstCall().returns(true)
-		;
+			;
 		fakeCoap.ping.returns(false);
 
 		// set up spies
@@ -316,7 +314,7 @@ describe("connection watching => ", () => {
 			.on("reconnecting", reconnectSpy)
 			.on("give up", giveupSpy)
 			.start()
-		;
+			;
 		// execute a number of pings
 		// reconnects should happen on ping #5, #7, #9
 		// giving up should happen on ping #11
@@ -350,7 +348,7 @@ describe("connection watching => ", () => {
 			.removeAllListeners("reconnecting")
 			.removeAllListeners("give up")
 			.stop()
-		;
+			;
 		fakeCoap.ping.resetBehavior();
 	});
 
@@ -366,7 +364,7 @@ describe("connection watching => ", () => {
 
 		fakeCoap.ping
 			.onFirstCall().returns(true)
-		;
+			;
 		fakeCoap.ping.returns(false);
 
 		// set up spies
@@ -376,7 +374,7 @@ describe("connection watching => ", () => {
 			.on("reconnecting", reconnectSpy)
 			.on("give up", giveupSpy)
 			.start()
-		;
+			;
 		// execute a large number of pings
 		for (let i = 1; i < 100; i++) {
 			await runAllAsync();
@@ -392,7 +390,7 @@ describe("connection watching => ", () => {
 			.removeAllListeners("reconnecting")
 			.removeAllListeners("give up")
 			.stop()
-		;
+			;
 		fakeCoap.ping.resetBehavior();
 	});
 
@@ -406,7 +404,7 @@ describe("connection watching => ", () => {
 
 		fakeCoap.ping
 			.onFirstCall().returns(true)
-		;
+			;
 		fakeCoap.ping.returns(false);
 
 		// set up spies
@@ -416,7 +414,7 @@ describe("connection watching => ", () => {
 			.on("reconnecting", reconnectSpy)
 			.on("give up", giveupSpy)
 			.start()
-		;
+			;
 		// execute a large number of pings
 		for (let i = 1; i < 100; i++) {
 			await runAllAsync();
@@ -433,7 +431,7 @@ describe("connection watching => ", () => {
 			.removeAllListeners("reconnecting")
 			.removeAllListeners("give up")
 			.stop()
-		;
+			;
 		fakeCoap.ping.resetBehavior();
 	});
 

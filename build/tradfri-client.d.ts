@@ -1,15 +1,15 @@
 /// <reference types="node" />
-import { EventEmitter } from "events";
-import { CoapResponse, RequestMethod } from "node-coap-client";
-import { Accessory } from "./lib/accessory";
-import { GatewayDetails, UpdatePriority } from "./lib/gatewayDetails";
-import { Group, GroupInfo, GroupOperation } from "./lib/group";
-import { LightOperation } from "./lib/light";
-import { LoggerFunction } from "./lib/logger";
-import { GatewayRebootReason } from "./lib/notification";
-import { OperationProvider } from "./lib/operation-provider";
-import { Scene } from "./lib/scene";
-import { ConnectionEvents, ConnectionWatcherOptions, PingFailedCallback, ReconnectingCallback } from "./lib/watcher";
+import {EventEmitter} from "events";
+import {CoapResponse, RequestMethod} from "react-native-coap-client";
+import {Accessory} from "./lib/accessory";
+import {GatewayDetails, UpdatePriority} from "./lib/gatewayDetails";
+import {Group, GroupInfo, GroupOperation} from "./lib/group";
+import {LightOperation} from "./lib/light";
+import {LoggerFunction} from "./lib/logger";
+import {GatewayRebootReason} from "./lib/notification";
+import {OperationProvider} from "./lib/operation-provider";
+import {Scene} from "./lib/scene";
+import {ConnectionEvents, ConnectionWatcherOptions, PingFailedCallback, ReconnectingCallback} from "./lib/watcher";
 export declare type ObserveResourceCallback = (resp: CoapResponse) => void;
 export declare type ObserveDevicesCallback = (addedDevices: Accessory[], removedDevices: Accessory[]) => void;
 export declare type DeviceUpdatedCallback = (device: Accessory) => void;
@@ -27,45 +27,45 @@ export declare type InternetConnectivityChangedCallback = (connected: boolean) =
 export declare type ObservableEvents = "device updated" | "device removed" | "group updated" | "group removed" | "scene updated" | "scene removed" | "gateway updated" | "error" | "connection failed";
 export declare type NotificationEvents = "rebooting" | "internet connectivity changed" | "firmware update available";
 export interface TradfriClient {
-    on(event: "device updated", callback: DeviceUpdatedCallback): this;
-    on(event: "device removed", callback: DeviceRemovedCallback): this;
-    on(event: "group updated", callback: GroupUpdatedCallback): this;
-    on(event: "group removed", callback: GroupRemovedCallback): this;
-    on(event: "scene updated", callback: SceneUpdatedCallback): this;
-    on(event: "scene removed", callback: SceneRemovedCallback): this;
-    on(event: "gateway updated", callback: GatewayUpdatedCallback): this;
-    on(event: "error", callback: ErrorCallback): this;
-    on(event: "ping succeeded", callback: () => void): this;
-    on(event: "ping failed", callback: PingFailedCallback): this;
-    on(event: "connection alive", callback: () => void): this;
-    on(event: "connection failed", callback: ConnectionFailedCallback): this;
-    on(event: "connection lost", callback: () => void): this;
-    on(event: "gateway offline", callback: () => void): this;
-    on(event: "reconnecting", callback: ReconnectingCallback): this;
-    on(event: "give up", callback: () => void): this;
-    on(event: "rebooting", callback: RebootNotificationCallback): this;
-    on(event: "firmware update available", callback: FirmwareUpdateNotificationCallback): this;
-    on(event: "internet connectivity changed", callback: InternetConnectivityChangedCallback): this;
-    removeListener(event: "device updated", callback: DeviceUpdatedCallback): this;
-    removeListener(event: "device removed", callback: DeviceRemovedCallback): this;
-    removeListener(event: "group updated", callback: GroupUpdatedCallback): this;
-    removeListener(event: "group removed", callback: GroupRemovedCallback): this;
-    removeListener(event: "scene updated", callback: SceneUpdatedCallback): this;
-    removeListener(event: "scene removed", callback: SceneRemovedCallback): this;
-    removeListener(event: "gateway updated", callback: GatewayUpdatedCallback): this;
-    removeListener(event: "error", callback: ErrorCallback): this;
-    removeListener(event: "ping succeeded", callback: () => void): this;
-    removeListener(event: "ping failed", callback: PingFailedCallback): this;
-    removeListener(event: "connection alive", callback: () => void): this;
-    removeListener(event: "connection failed", callback: ConnectionFailedCallback): this;
-    removeListener(event: "connection lost", callback: () => void): this;
-    removeListener(event: "gateway offline", callback: () => void): this;
-    removeListener(event: "reconnecting", callback: ReconnectingCallback): this;
-    removeListener(event: "give up", callback: () => void): this;
-    removeListener(event: "rebooting", callback: RebootNotificationCallback): this;
-    removeListener(event: "firmware update available", callback: FirmwareUpdateNotificationCallback): this;
-    removeListener(event: "internet connectivity changed", callback: InternetConnectivityChangedCallback): this;
-    removeAllListeners(event?: ObservableEvents | ConnectionEvents | NotificationEvents): this;
+    on (event: "device updated", callback: DeviceUpdatedCallback): this;
+    on (event: "device removed", callback: DeviceRemovedCallback): this;
+    on (event: "group updated", callback: GroupUpdatedCallback): this;
+    on (event: "group removed", callback: GroupRemovedCallback): this;
+    on (event: "scene updated", callback: SceneUpdatedCallback): this;
+    on (event: "scene removed", callback: SceneRemovedCallback): this;
+    on (event: "gateway updated", callback: GatewayUpdatedCallback): this;
+    on (event: "error", callback: ErrorCallback): this;
+    on (event: "ping succeeded", callback: () => void): this;
+    on (event: "ping failed", callback: PingFailedCallback): this;
+    on (event: "connection alive", callback: () => void): this;
+    on (event: "connection failed", callback: ConnectionFailedCallback): this;
+    on (event: "connection lost", callback: () => void): this;
+    on (event: "gateway offline", callback: () => void): this;
+    on (event: "reconnecting", callback: ReconnectingCallback): this;
+    on (event: "give up", callback: () => void): this;
+    on (event: "rebooting", callback: RebootNotificationCallback): this;
+    on (event: "firmware update available", callback: FirmwareUpdateNotificationCallback): this;
+    on (event: "internet connectivity changed", callback: InternetConnectivityChangedCallback): this;
+    removeListener (event: "device updated", callback: DeviceUpdatedCallback): this;
+    removeListener (event: "device removed", callback: DeviceRemovedCallback): this;
+    removeListener (event: "group updated", callback: GroupUpdatedCallback): this;
+    removeListener (event: "group removed", callback: GroupRemovedCallback): this;
+    removeListener (event: "scene updated", callback: SceneUpdatedCallback): this;
+    removeListener (event: "scene removed", callback: SceneRemovedCallback): this;
+    removeListener (event: "gateway updated", callback: GatewayUpdatedCallback): this;
+    removeListener (event: "error", callback: ErrorCallback): this;
+    removeListener (event: "ping succeeded", callback: () => void): this;
+    removeListener (event: "ping failed", callback: PingFailedCallback): this;
+    removeListener (event: "connection alive", callback: () => void): this;
+    removeListener (event: "connection failed", callback: ConnectionFailedCallback): this;
+    removeListener (event: "connection lost", callback: () => void): this;
+    removeListener (event: "gateway offline", callback: () => void): this;
+    removeListener (event: "reconnecting", callback: ReconnectingCallback): this;
+    removeListener (event: "give up", callback: () => void): this;
+    removeListener (event: "rebooting", callback: RebootNotificationCallback): this;
+    removeListener (event: "firmware update available", callback: FirmwareUpdateNotificationCallback): this;
+    removeListener (event: "internet connectivity changed", callback: InternetConnectivityChangedCallback): this;
+    removeAllListeners (event?: ObservableEvents | ConnectionEvents | NotificationEvents): this;
 }
 export interface TradfriOptions {
     /** Callback for a custom logger function. */
@@ -91,15 +91,15 @@ export declare class TradfriClient extends EventEmitter implements OperationProv
     private watcher;
     /** A dictionary of the observer callbacks. Used to restore it after a soft reset */
     private rememberedObserveCallbacks;
-    constructor(hostname: string);
-    constructor(hostname: string, customLogger: LoggerFunction);
-    constructor(hostname: string, options: Partial<TradfriOptions>);
+    constructor (hostname: string);
+    constructor (hostname: string, customLogger: LoggerFunction);
+    constructor (hostname: string, options: Partial<TradfriOptions>);
     /**
      * Connect to the gateway
      * @param identity A previously negotiated identity.
      * @param psk The pre-shared key belonging to the identity.
      */
-    connect(identity: string, psk: string): Promise<true>;
+    connect (identity: string, psk: string): Promise<true>;
     /**
      * Try to establish a connection to the configured gateway.
      * @param identity The DTLS identity to use
@@ -113,7 +113,7 @@ export declare class TradfriClient extends EventEmitter implements OperationProv
      * @returns The identity and psk to use for future connections. Store these!
      * @throws TradfriError
      */
-    authenticate(securityCode: string): Promise<{
+    authenticate (securityCode: string): Promise<{
         identity: string;
         psk: string;
     }>;
@@ -124,41 +124,41 @@ export declare class TradfriClient extends EventEmitter implements OperationProv
      * @param callback The callback to be invoked when the resource updates
      * @returns true if the observer was set up, false otherwise (e.g. if it already exists)
      */
-    observeResource(path: string, callback: (resp: CoapResponse) => void): Promise<boolean>;
+    observeResource (path: string, callback: (resp: CoapResponse) => void): Promise<boolean>;
     private getObserverUrl;
     /**
      * Checks if a resource is currently being observed
      * @param path The path of the resource
      */
-    isObserving(path: string): boolean;
+    isObserving (path: string): boolean;
     /**
      * Stops observing a resource that is being observed through `observeResource`
      * Use the specialized version of this method for observers that were set up with the specialized versions of `observeResource`
      * @param path The path of the resource
      */
-    stopObservingResource(path: string): void;
+    stopObservingResource (path: string): void;
     /**
      * Resets the underlying CoAP client and clears all observers.
      * @param preserveObservers Whether the active observers should be remembered to restore them later
      */
-    reset(preserveObservers?: boolean): void;
+    reset (preserveObservers?: boolean): void;
     /**
      * Closes the underlying CoAP client and clears all observers.
      */
-    destroy(): void;
+    destroy (): void;
     /**
      * Restores all previously remembered observers with their original callbacks
      * Call this AFTER a dead connection was restored
      */
-    restoreObservers(): Promise<void>;
+    restoreObservers (): Promise<void>;
     private observeDevicesPromise;
     /**
      * Sets up an observer for all devices
      * @returns A promise that resolves when the information about all devices has been received.
      */
-    observeDevices(): Promise<void>;
+    observeDevices (): Promise<void>;
     private observeDevices_callback;
-    stopObservingDevices(): void;
+    stopObservingDevices (): void;
     private observeDevice_callback;
     private observeGroupsPromise;
     private observeScenesPromises;
@@ -166,9 +166,9 @@ export declare class TradfriClient extends EventEmitter implements OperationProv
      * Sets up an observer for all groups and scenes
      * @returns A promise that resolves when the information about all groups and scenes has been received.
      */
-    observeGroupsAndScenes(): Promise<void>;
+    observeGroupsAndScenes (): Promise<void>;
     private observeGroups_callback;
-    stopObservingGroups(): void;
+    stopObservingGroups (): void;
     private stopObservingGroup;
     private observeGroup_callback;
     private observeScenes_callback;
@@ -178,17 +178,17 @@ export declare class TradfriClient extends EventEmitter implements OperationProv
      * Sets up an observer for the gateway
      * @returns A promise that resolves when the gateway information has been received for the first time
      */
-    observeGateway(): Promise<void>;
+    observeGateway (): Promise<void>;
     private observeGateway_callback;
-    stopObservingGateway(): void;
+    stopObservingGateway (): void;
     private observeNotificationsPromise;
     /**
      * Sets up an observer for the notification
      * @returns A promise that resolves when a notification has been received for the first time
      */
-    observeNotifications(): Promise<void>;
+    observeNotifications (): Promise<void>;
     private observeNotifications_callback;
-    stopObservingNotifications(): void;
+    stopObservingNotifications (): void;
     /**
      * Handles a non-successful response, e.g. by error logging
      * @param resp The response with a code that indicates an unsuccessful request
@@ -200,19 +200,19 @@ export declare class TradfriClient extends EventEmitter implements OperationProv
      * Pings the gateway to check if it is alive
      * @param timeout - (optional) Timeout in ms, after which the ping is deemed unanswered. Default: 5000ms
      */
-    ping(timeout?: number): Promise<boolean>;
+    ping (timeout?: number): Promise<boolean>;
     /**
      * Updates a device object on the gateway
      * @param accessory The device to be changed
      * @returns true if a request was sent, false otherwise
      */
-    updateDevice(accessory: Accessory): Promise<boolean>;
+    updateDevice (accessory: Accessory): Promise<boolean>;
     /**
      * Updates a group object on the gateway
      * @param group The group to be changed
      * @returns true if a request was sent, false otherwise
      */
-    updateGroup(group: Group): Promise<boolean>;
+    updateGroup (group: Group): Promise<boolean>;
     /**
      * Updates a generic resource on the gateway
      * @param path The path where the resource is located
@@ -228,27 +228,27 @@ export declare class TradfriClient extends EventEmitter implements OperationProv
      * @param force If the provided properties must be sent in any case
      * @returns true if a request was sent, false otherwise
      */
-    operateGroup(group: Group, operation: GroupOperation, force?: boolean): Promise<boolean>;
+    operateGroup (group: Group, operation: GroupOperation, force?: boolean): Promise<boolean>;
     /**
      * Sets some properties on a lightbulb
      * @param accessory The parent accessory of the lightbulb
      * @param operation The properties to be set
      * @returns true if a request was sent, false otherwise
      */
-    operateLight(accessory: Accessory, operation: LightOperation): Promise<boolean>;
+    operateLight (accessory: Accessory, operation: LightOperation): Promise<boolean>;
     /**
      * Sends a custom request to a resource
      * @param path The path of the resource
      * @param method The method of the request
      * @param payload The optional payload as a JSON object
      */
-    request(path: string, method: RequestMethod, payload?: object): Promise<{
+    request (path: string, method: RequestMethod, payload?: object): Promise<{
         code: string;
         payload: any;
     }>;
     private swallowInternalCoapRejections;
     /** Reboots the gateway. This operation is additionally acknowledged with a reboot notification. */
-    rebootGateway(): Promise<boolean>;
+    rebootGateway (): Promise<boolean>;
     /** Factory resets the gateway. WARNING: All configuration will be wiped! */
-    resetGateway(): Promise<boolean>;
+    resetGateway (): Promise<boolean>;
 }

@@ -2,21 +2,19 @@
 // tslint:disable:no-unused-expression
 // tslint:disable:variable-name
 
-import { assert, expect } from "chai";
-import { SinonFakeTimers, spy, stub, useFakeTimers } from "sinon";
+import {expect} from "chai";
+import {SinonFakeTimers, spy, stub, useFakeTimers} from "sinon";
 
-import { createDeferredPromise, DeferredPromise } from "alcalzone-shared/deferred-promise";
-import { padStart } from "alcalzone-shared/strings";
-import { CoapClient as coap, CoapResponse } from "node-coap-client";
-import { ContentFormats } from "node-coap-client/build/ContentFormats";
-import { MessageCode, MessageCodes } from "node-coap-client/build/Message";
-import { createEmptyAccessoryResponse, createEmptyGatewayDetailsResponse, createEmptyGroupResponse, createEmptySceneResponse, createErrorResponse, createNetworkMock, createResponse, createRGBBulb } from "../test/mocks";
+import {createDeferredPromise, DeferredPromise} from "alcalzone-shared/deferred-promise";
+import {CoapClient as coap, CoapResponse} from "react-native-coap-client";
+import {ContentFormats} from "react-native-coap-client/build/ContentFormats";
+import {MessageCodes} from "react-native-coap-client/build/Message";
+import {createEmptyAccessoryResponse, createEmptyGatewayDetailsResponse, createEmptyGroupResponse, createEmptySceneResponse, createErrorResponse, createNetworkMock, createResponse, createRGBBulb} from "../test/mocks";
 import "./"; // dummy-import so index.ts is covered
-import { Accessory, AccessoryTypes, GatewayDetails, Light, TradfriError, TradfriErrorCodes } from "./";
-import { GatewayEndpoints } from "./lib/endpoints";
-import { TradfriClient } from "./tradfri-client";
+import {Accessory, AccessoryTypes, GatewayDetails, Light, TradfriError, TradfriErrorCodes} from "./";
+import {GatewayEndpoints} from "./lib/endpoints";
 
-function assertPayload(actual: any, expected: {}) {
+function assertPayload (actual: any, expected: {}) {
 	expect(actual).to.be.an.instanceof(Buffer);
 	expect(JSON.parse(actual.toString())).to.deep.equal(expected);
 }
@@ -62,7 +60,7 @@ describe("tradfri-client => infrastructure => ", () => {
 			fakeCoap.reset.should.have.been.called;
 			fakeCoap.setSecurityParams.should.have.been.called;
 			fakeCoap.setSecurityParams.getCall(0).args[1].should.deep.equal({
-				psk: { [identity]: psk },
+				psk: {[identity]: psk},
 			});
 			fakeCoap.tryToConnect.should.have.been.called;
 
@@ -112,7 +110,7 @@ describe("tradfri-client => infrastructure => ", () => {
 		const dummyIdentity = "IDENTITY";
 		const generatedPSK = "ABCDEFG";
 		const failedAuthResponse = createResponse(null, MessageCodes.clientError.unauthorized);
-		const authResponse = createResponse({ 9091: generatedPSK }, MessageCodes.success.created);
+		const authResponse = createResponse({9091: generatedPSK}, MessageCodes.success.created);
 
 		afterEach(() => {
 			fakeCoap.tryToConnect.resetBehavior();
@@ -123,7 +121,7 @@ describe("tradfri-client => infrastructure => ", () => {
 			fakeCoap.tryToConnect.returns(Promise.resolve(true));
 			fakeCoap.request.returns(Promise.resolve(authResponse));
 			let generatedIdentity: string;
-			await tradfri.authenticate(dummyIdentity).should.be.fulfilled.then(({ identity, psk }) => {
+			await tradfri.authenticate(dummyIdentity).should.be.fulfilled.then(({identity, psk}) => {
 				expect(identity.startsWith("tradfri_")).to.be.true;
 				generatedIdentity = identity;
 				expect(psk).to.equal(generatedPSK);
@@ -134,7 +132,7 @@ describe("tradfri-client => infrastructure => ", () => {
 			fakeCoap.request.getCall(0).args[1].should.equal("post");
 			assertPayload(
 				fakeCoap.request.getCall(0).args[2],
-				{ 9090: generatedIdentity },
+				{9090: generatedIdentity},
 			);
 		});
 
@@ -207,7 +205,7 @@ describe("tradfri-client => infrastructure => ", () => {
 describe("tradfri-client => retrying the connection => ", () => {
 	let clock: SinonFakeTimers;
 
-	beforeEach(() => { clock = useFakeTimers(); });
+	beforeEach(() => {clock = useFakeTimers();});
 	afterEach(() => clock.restore());
 
 	// Setup the mock
@@ -231,7 +229,7 @@ describe("tradfri-client => retrying the connection => ", () => {
 
 	let connectionFailedPromise: DeferredPromise<void>;
 	// async hacked version of clock.runAll that waits for the async method to complete aswell
-	async function runAllAsync() {
+	async function runAllAsync () {
 		clock.runAll();
 		connectionFailedPromise = createDeferredPromise();
 		await connectionFailedPromise;
@@ -690,7 +688,7 @@ describe("tradfri-client => updating resources => ", () => {
 	let lightAccessory: Accessory;
 	let light: Light;
 
-	async function resetDeviceInfrastructure() {
+	async function resetDeviceInfrastructure () {
 		tradfri.reset();
 		tradfri.removeAllListeners();
 
@@ -774,15 +772,15 @@ describe("tradfri-client => custom requests => ", () => {
 
 		const path = "testpath";
 		const method = "delete";
-		const payload = { foo: "bar" };
-		const responsePayload = { test: "blub" };
+		const payload = {foo: "bar"};
+		const responsePayload = {test: "blub"};
 		const response = createResponse(responsePayload, MessageCodes.clientError.badOption);
 		let actualResponse: {
 			code: string,
 			payload: any,
 		};
 
-		before(() => { fakeCoap.request.returns(Promise.resolve(response)); });
+		before(() => {fakeCoap.request.returns(Promise.resolve(response));});
 		after(() => fakeCoap.request.resetBehavior());
 
 		it("should call coap.request with the payload converted to a JSON Buffer", async () => {

@@ -2,19 +2,17 @@
 // tslint:disable:no-unused-expression
 // tslint:disable:variable-name
 
-import { assert, expect } from "chai";
-import { spy, stub } from "sinon";
+import {stub} from "sinon";
 
-import { createDeferredPromise, DeferredPromise } from "alcalzone-shared/deferred-promise";
-import { CoapClient as coap, CoapResponse } from "node-coap-client";
-import { ContentFormats } from "node-coap-client/build/ContentFormats";
-import { MessageCode, MessageCodes } from "node-coap-client/build/Message";
-import { ConnectionWatcherOptions } from "../build/lib/watcher";
-import { Accessory, GatewayDetails, Group, Light, Scene, TradfriClient } from "../src";
-import { GatewayEndpoints } from "../src/lib/endpoints";
-import { TradfriOptions } from "../src/tradfri-client";
+import {createDeferredPromise, DeferredPromise} from "alcalzone-shared/deferred-promise";
+import {CoapClient as coap, CoapResponse} from "react-native-coap-client";
+import {ContentFormats} from "react-native-coap-client/build/ContentFormats";
+import {MessageCode, MessageCodes} from "react-native-coap-client/build/Message";
+import {Accessory, GatewayDetails, Group, Light, Scene, TradfriClient} from "../src";
+import {GatewayEndpoints} from "../src/lib/endpoints";
+import {TradfriOptions} from "../src/tradfri-client";
 
-export function createResponse(
+export function createResponse (
 	payload: Buffer | string | any | null,
 	code: MessageCode = MessageCodes.success.content,
 	contentFormat: ContentFormats = ContentFormats.application_json,
@@ -32,7 +30,7 @@ export function createResponse(
 				Buffer.from(payload, "utf8") : undefined,
 	};
 }
-export function createErrorResponse(code: MessageCode = MessageCodes.clientError.notFound): CoapResponse {
+export function createErrorResponse (code: MessageCode = MessageCodes.clientError.notFound): CoapResponse {
 	return {
 		code,
 		format: ContentFormats.text_plain,
@@ -49,7 +47,7 @@ export interface MockOptions {
  * Creates a mock for the entire network and callback framework
  * @param hostname The (optional) hostname to use for the mock
  */
-export function createNetworkMock(
+export function createNetworkMock (
 	hostname: string = "localhost",
 	tradfriOptions?: Partial<TradfriOptions>,
 	mockOptions?: Partial<MockOptions>,
@@ -85,7 +83,7 @@ export function createNetworkMock(
 	/**
 	 * Remembers a callback for later tests
 	 */
-	function rememberCallback(path: string, cb: (response: CoapResponse) => Promise<void>) {
+	function rememberCallback (path: string, cb: (response: CoapResponse) => Promise<void>) {
 		if (path === devicesUrl) {
 			callbacks.observeDevices = cb;
 		} else if (path.indexOf(devicesUrl) > -1) {
@@ -109,7 +107,7 @@ export function createNetworkMock(
 		}
 	}
 
-	function createStubs() {
+	function createStubs () {
 		fakeCoap.observe = stub(coap, "observe")
 			.callsFake((path: string, method, cb) => {
 				rememberCallback(path, cb);
@@ -137,13 +135,13 @@ export function createNetworkMock(
 		fakeCoap.ping = stub(coap, "ping");
 	}
 
-	function restoreStubs() {
+	function restoreStubs () {
 		for (const method of Object.keys(fakeCoap)) {
 			fakeCoap[method].restore();
 		}
 	}
 
-	function resetStubHistory() {
+	function resetStubHistory () {
 		for (const method of Object.keys(fakeCoap)) {
 			fakeCoap[method].resetHistory();
 		}
@@ -164,53 +162,53 @@ export function createNetworkMock(
 	};
 }
 
-export function createEmptyAccessory(instanceId: number = 65536) {
+export function createEmptyAccessory (instanceId: number = 65536) {
 	const ret = new Accessory();
 	ret.instanceId = instanceId;
 	return ret.serialize();
 }
-export function createEmptyAccessoryResponse(instanceId?: number) {
+export function createEmptyAccessoryResponse (instanceId?: number) {
 	return createResponse(createEmptyAccessory(instanceId));
 }
 
-export function createEmptyGroup(instanceId: number = 123456) {
+export function createEmptyGroup (instanceId: number = 123456) {
 	const ret = new Group();
 	ret.instanceId = instanceId;
 	return ret.serialize();
 }
-export function createEmptyGroupResponse(instanceId?: number) {
+export function createEmptyGroupResponse (instanceId?: number) {
 	return createResponse(createEmptyGroup(instanceId));
 }
 
-export function createEmptyScene(instanceId: number = 654321) {
+export function createEmptyScene (instanceId: number = 654321) {
 	const ret = new Scene();
 	ret.instanceId = instanceId;
 	return ret.serialize();
 }
-export function createEmptySceneResponse(instanceId?: number) {
+export function createEmptySceneResponse (instanceId?: number) {
 	return createResponse(createEmptyScene(instanceId));
 }
 
-export function createEmptyLight(instanceId: number = 65536) {
+export function createEmptyLight (instanceId: number = 65536) {
 	const ret = new Accessory();
 	const light = new Light(null, ret);
 	ret.instanceId = instanceId;
 	ret.lightList = [light];
 	return ret.serialize();
 }
-export function createEmptyLightResponse(instanceId?: number) {
+export function createEmptyLightResponse (instanceId?: number) {
 	return createResponse(createEmptyLight(instanceId));
 }
 
-export function createEmptyGatewayDetails() {
+export function createEmptyGatewayDetails () {
 	const ret = new GatewayDetails();
 	return ret.serialize();
 }
-export function createEmptyGatewayDetailsResponse() {
+export function createEmptyGatewayDetailsResponse () {
 	return createResponse(createEmptyGatewayDetails());
 }
 
-export function createRGBBulb(instanceId: number = 65536) {
+export function createRGBBulb (instanceId: number = 65536) {
 	{
 		return {
 			3: {
@@ -244,7 +242,7 @@ export function createRGBBulb(instanceId: number = 65536) {
 	}
 }
 
-export function createWSBulb(instanceId: number = 65536) {
+export function createWSBulb (instanceId: number = 65536) {
 	{
 		return {
 			3: {
