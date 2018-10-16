@@ -1,7 +1,7 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const createMDNSServer = require("mdns-server");
-function parseTXTRecord(data) {
+Object.defineProperty(exports, "__esModule", {value: true});
+const createMDNSServer = require("react-native-mdns-server");
+function parseTXTRecord (data) {
     const ret = {};
     let offset = 0;
     while (offset < data.length) {
@@ -18,7 +18,7 @@ function parseTXTRecord(data) {
  * @param timeout (optional) Time in milliseconds to wait for a response. Default 10000.
  * Pass false or a negative number to explicitly wait forever.
  */
-function discoverGateway(timeout = 10000) {
+function discoverGateway (timeout = 10000) {
     const mdns = createMDNSServer({
         reuseAddr: true,
         loopback: false,
@@ -49,7 +49,7 @@ function discoverGateway(timeout = 10000) {
             const match = /^gw\-[0-9a-f]{12}/.exec(ptrRecord.data);
             const name = !!match ? match[0] : "unknown";
             const host = srvRecord.data.target;
-            const { version } = parseTXTRecord(txtRecord.data);
+            const {version} = parseTXTRecord(txtRecord.data);
             const addresses = aRecords.map(a => a.data);
             if (timer != null)
                 clearTimeout(timer);
@@ -60,11 +60,11 @@ function discoverGateway(timeout = 10000) {
         });
         mdns.on("ready", () => {
             mdns.query([
-                { name: domain, type: "A" },
-                { name: domain, type: "AAAA" },
-                { name: domain, type: "PTR" },
-                { name: domain, type: "SRV" },
-                { name: domain, type: "TXT" },
+                {name: domain, type: "A"},
+                {name: domain, type: "AAAA"},
+                {name: domain, type: "PTR"},
+                {name: domain, type: "SRV"},
+                {name: domain, type: "TXT"},
             ]);
         });
         mdns.on("error", reject);
