@@ -2,17 +2,16 @@
 // tslint:disable:no-unused-expression
 // tslint:disable:variable-name
 
-import { assert, expect } from "chai";
-import { spy, stub } from "sinon";
+import {assert, expect} from "chai";
+import {spy, stub} from "sinon";
 
 // stub out the debug package for logger
-import * as debugPackage from "debug";
 const debugSpy = stub();
 import * as proxyquire from "proxyquire";
-const { log, setCustomLogger } = proxyquire("./logger", {
+const {log, setCustomLogger} = proxyquire("./logger", {
 	debug: stub().callsFake(namespace => {
 		if (namespace === "node-tradfri-client") return debugSpy;
-		return debugPackage(namespace);
+		return console.log(namespace);
 	}),
 });
 
