@@ -1,3 +1,5 @@
+This is a react native friendly version of [node-tradfri-client](https://github.com/AlCalzone/node-tradfri-client). All the credit to [AlCalzone](https://github.com/AlCalzone).
+
 # node-tradfri-client
 Library to talk to IKEA Trådfri Gateways without external binaries
 
