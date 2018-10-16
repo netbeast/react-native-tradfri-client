@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "alcalzone-shared": "^1.0.1",
-    "node-coap-client": "netbeast/react-native-coap-client",
+    "react-native-coap-client": "netbeast/react-native-coap-client",
     "react-native-mdns-server": "netbeast/react-native-mdns-server",
     "reflect-metadata": "^0.1.12"
   },
